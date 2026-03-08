@@ -22,7 +22,7 @@ type HostData struct {
 	String   string `json:"string,omitempty" yaml:"string,omitempty"`
 	User     string `json:"user,omitempty" yaml:"user,omitempty"`
 	Password string `json:"password,omitempty" yaml:"password,omitempty"`
-	Name     string `json:"hostname,omitempty" yaml:"hostname,omitempty"`
+	Name     string `json:"name,omitempty" yaml:"name,omitempty"`
 	Port     string `json:"port,omitempty" yaml:"port,omitempty"`
 }
 
