@@ -15,7 +15,7 @@ import (
 
 var cli struct {
 	Mode string   `help:"Output mode (json or yaml)" short:"m" default:"yaml" enum:"json,yaml"`
-	URLs []string `arg:"" help:"URLs to parse"`
+	Urls []string `arg:"" help:"URLs to parse"`
 }
 
 type HostData struct {
@@ -32,7 +32,7 @@ type PathData struct {
 }
 
 type QueryData struct {
-	String string                 `json:"string,omitempty" yaml:"string,omitempty"`
+	String string         `json:"string,omitempty" yaml:"string,omitempty"`
 	Params map[string]any `json:"params,omitempty" yaml:"params,omitempty"`
 }
 
@@ -151,7 +151,7 @@ func main() {
 	enc := json.NewEncoder(w)
 	enc.SetEscapeHTML(false)
 
-	for i, rawURL := range cli.URLs {
+	for i, rawURL := range cli.Urls {
 		data, err := parseURL(rawURL)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)

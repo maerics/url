@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestParseURL(t *testing.T) {
@@ -98,112 +100,8 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseURL(tt.input)
-			if err != nil {
-				t.Fatalf("unexpected error: %v", err)
-			}
-			if got == nil {
-				t.Fatal("got nil result")
-			}
-			assertEqual(t, "Scheme", tt.want.Scheme, got.Scheme)
-			assertHost(t, tt.want.Host, got.Host)
-			assertPath(t, tt.want.Path, got.Path)
-			assertQuery(t, tt.want.Query, got.Query)
-			assertFragment(t, tt.want.Fragment, got.Fragment)
+			require.NoError(t, err)
+			require.Equal(t, tt.want, *got)
 		})
 	}
-}
-
-func assertEqual(t *testing.T, field, want, got string) {
-	t.Helper()
-	if want != got {
-		t.Errorf("%s: want %q, got %q", field, want, got)
-	}
-}
-
-func assertHost(t *testing.T, want, got *HostData) {
-	t.Helper()
-	if want == nil && got == nil {
-		return
-	}
-	if want == nil || got == nil {
-		t.Errorf("host: want %v, got %v", want, got)
-		return
-	}
-	assertEqual(t, "host.string", want.String, got.String)
-	assertEqual(t, "host.user", want.User, got.User)
-	assertEqual(t, "host.password", want.Password, got.Password)
-	assertEqual(t, "host.hostname", want.Hostname, got.Hostname)
-	assertEqual(t, "host.port", want.Port, got.Port)
-}
-
-func assertPath(t *testing.T, want, got *PathData) {
-	t.Helper()
-	if want == nil && got == nil {
-		return
-	}
-	if want == nil || got == nil {
-		t.Errorf("path: want %v, got %v", want, got)
-		return
-	}
-	assertEqual(t, "path.string", want.String, got.String)
-	if len(want.Parts) != len(got.Parts) {
-		t.Errorf("path.parts: want %v, got %v", want.Parts, got.Parts)
-		return
-	}
-	for i := range want.Parts {
-		assertEqual(t, "path.parts["+string(rune('0'+i))+"]", want.Parts[i], got.Parts[i])
-	}
-}
-
-func assertQuery(t *testing.T, want, got *QueryData) {
-	t.Helper()
-	if want == nil && got == nil {
-		return
-	}
-	if want == nil || got == nil {
-		t.Errorf("query: want %v, got %v", want, got)
-		return
-	}
-	assertEqual(t, "query.string", want.String, got.String)
-	for k, wv := range want.Params {
-		gv, ok := got.Params[k]
-		if !ok {
-			t.Errorf("query.params[%q]: missing", k)
-			continue
-		}
-		switch wval := wv.(type) {
-		case string:
-			if gval, ok := gv.(string); !ok || gval != wval {
-				t.Errorf("query.params[%q]: want %q, got %v", k, wval, gv)
-			}
-		case []string:
-			gval, ok := gv.([]string)
-			if !ok {
-				t.Errorf("query.params[%q]: want []string, got %T", k, gv)
-				continue
-			}
-			if len(gval) != len(wval) {
-				t.Errorf("query.params[%q]: want %v, got %v", k, wval, gval)
-				continue
-			}
-			for i := range wval {
-				if wval[i] != gval[i] {
-					t.Errorf("query.params[%q][%d]: want %q, got %q", k, i, wval[i], gval[i])
-				}
-			}
-		}
-	}
-}
-
-func assertFragment(t *testing.T, want, got *FragmentData) {
-	t.Helper()
-	if want == nil && got == nil {
-		return
-	}
-	if want == nil || got == nil {
-		t.Errorf("fragment: want %v, got %v", want, got)
-		return
-	}
-	assertEqual(t, "fragment.string", want.String, got.String)
-	assertEqual(t, "fragment.raw", want.Raw, got.Raw)
 }
