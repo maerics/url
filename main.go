@@ -22,7 +22,7 @@ type HostData struct {
 	String   string `json:"string,omitempty" yaml:"string,omitempty"`
 	User     string `json:"user,omitempty" yaml:"user,omitempty"`
 	Password string `json:"password,omitempty" yaml:"password,omitempty"`
-	Hostname string `json:"hostname,omitempty" yaml:"hostname,omitempty"`
+	Name     string `json:"hostname,omitempty" yaml:"hostname,omitempty"`
 	Port     string `json:"port,omitempty" yaml:"port,omitempty"`
 }
 
@@ -72,7 +72,7 @@ func parseURL(rawURL string) (*URLData, error) {
 			authority = u.User.String() + "@" + u.Host
 		}
 		hd.String = authority
-		hd.Hostname = u.Hostname()
+		hd.Name = u.Hostname()
 		hd.Port = u.Port()
 		data.Host = hd
 	}

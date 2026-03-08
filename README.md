@@ -36,7 +36,7 @@ host:
   string: user:pass@example.com:8080
   user: user
   password: pass
-  hostname: example.com
+  name: example.com
   port: "8080"
 path:
   string: /a/b
@@ -56,7 +56,25 @@ JSON output with `-m json`:
 
 ```sh
 $ url -m json 'https://example.com/search?q=hello'
-{"scheme":"https","host":{"string":"example.com","hostname":"example.com"},"path":{"string":"/search","parts":["search"]},"query":{"string":"?q=hello","params":{"q":"hello"}}}
+{
+  "scheme": "https",
+  "host": {
+    "string": "example.com",
+    "name": "example.com"
+  },
+  "path": {
+    "string": "/search",
+    "parts": [
+      "search"
+    ]
+  },
+  "query": {
+    "string": "?q=hello",
+    "params": {
+      "q": "hello"
+    }
+  }
+}
 ```
 
 Parse multiple URLs (YAML documents separated by `---`):
@@ -66,12 +84,12 @@ $ url 'https://example.com' 'http://localhost:3000/api'
 scheme: https
 host:
   string: example.com
-  hostname: example.com
+  name: example.com
 ---
 scheme: http
 host:
   string: localhost:3000
-  hostname: localhost
+  name: localhost
   port: "3000"
 path:
   string: /api

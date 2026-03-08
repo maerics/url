@@ -21,7 +21,7 @@ func TestParseURL(t *testing.T) {
 					String:   "user:pass@example.com:8080",
 					User:     "user",
 					Password: "pass",
-					Hostname: "example.com",
+					Name:     "example.com",
 					Port:     "8080",
 				},
 				Path: &PathData{
@@ -40,7 +40,7 @@ func TestParseURL(t *testing.T) {
 			input: "https://example.com",
 			want: URLData{
 				Scheme: "https",
-				Host:   &HostData{String: "example.com", Hostname: "example.com"},
+				Host:   &HostData{String: "example.com", Name: "example.com"},
 			},
 		},
 		{
@@ -55,7 +55,7 @@ func TestParseURL(t *testing.T) {
 			input: "https://example.com/",
 			want: URLData{
 				Scheme: "https",
-				Host:   &HostData{String: "example.com", Hostname: "example.com"},
+				Host:   &HostData{String: "example.com", Name: "example.com"},
 				Path:   &PathData{String: "/"},
 			},
 		},
@@ -64,7 +64,7 @@ func TestParseURL(t *testing.T) {
 			input: "https://example.com?q=hello",
 			want: URLData{
 				Scheme: "https",
-				Host:   &HostData{String: "example.com", Hostname: "example.com"},
+				Host:   &HostData{String: "example.com", Name: "example.com"},
 				Query:  &QueryData{String: "?q=hello", Params: map[string]any{"q": "hello"}},
 			},
 		},
@@ -73,7 +73,7 @@ func TestParseURL(t *testing.T) {
 			input: "https://example.com#section",
 			want: URLData{
 				Scheme:   "https",
-				Host:     &HostData{String: "example.com", Hostname: "example.com"},
+				Host:     &HostData{String: "example.com", Name: "example.com"},
 				Fragment: &FragmentData{String: "section"},
 			},
 		},
@@ -82,7 +82,7 @@ func TestParseURL(t *testing.T) {
 			input: "https://example.com#a%2Bb",
 			want: URLData{
 				Scheme:   "https",
-				Host:     &HostData{String: "example.com", Hostname: "example.com"},
+				Host:     &HostData{String: "example.com", Name: "example.com"},
 				Fragment: &FragmentData{String: "a+b", Raw: "#a%2Bb"},
 			},
 		},
@@ -91,7 +91,7 @@ func TestParseURL(t *testing.T) {
 			input: "ftp://admin@files.example.com/pub",
 			want: URLData{
 				Scheme: "ftp",
-				Host:   &HostData{String: "admin@files.example.com", User: "admin", Hostname: "files.example.com"},
+				Host:   &HostData{String: "admin@files.example.com", User: "admin", Name: "files.example.com"},
 				Path:   &PathData{String: "/pub", Parts: []string{"pub"}},
 			},
 		},
