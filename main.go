@@ -14,9 +14,20 @@ import (
 )
 
 var cli struct {
-	JSON bool     `help:"Output as JSON (default)" short:"j" xor:"format"`
-	YAML bool     `help:"Output as YAML" short:"y" xor:"format"`
-	Urls []string `arg:"" help:"URLs to parse"`
+	Version kong.VersionFlag `help:"Print version and exit." short:"v"`
+	JSON    bool             `help:"Output as JSON (default)" short:"j" xor:"format"`
+	YAML    bool             `help:"Output as YAML" short:"y" xor:"format"`
+	Urls    []string         `arg:"" help:"URLs to parse"`
+}
+
+// Linked at build time.
+var version, commit, date string
+
+func getVersionString() string {
+	if version == "" {
+		return "(unknown)"
+	}
+	return fmt.Sprintf("v%v, commit=%v, timestamp=%v", version, commit, date)
 }
 
 type HostData struct {
@@ -146,7 +157,7 @@ func prettyWriter(format string) (io.Writer, func()) {
 }
 
 func main() {
-	kong.Parse(&cli, kong.UsageOnError())
+	kong.Parse(&cli, kong.UsageOnError(), kong.Vars{"version": getVersionString()})
 
 	format := "json"
 	if cli.YAML {
