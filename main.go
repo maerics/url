@@ -14,16 +14,16 @@ import (
 )
 
 var cli struct {
-	Mode string   `help:"Output mode (json or yaml)" short:"m" default:"yaml" enum:"json,yaml"`
-	Urls []string `arg:"" help:"URLs to parse"`
+	Format string   `help:"Output format (json or yaml)" short:"f" default:"json" enum:"json,yaml"`
+	Urls   []string `arg:"" help:"URLs to parse"`
 }
 
 type HostData struct {
 	Authority string `json:"authority,omitempty" yaml:"authority,omitempty"`
 	User      string `json:"user,omitempty" yaml:"user,omitempty"`
-	Password string `json:"password,omitempty" yaml:"password,omitempty"`
-	Name     string `json:"name,omitempty" yaml:"name,omitempty"`
-	Port     string `json:"port,omitempty" yaml:"port,omitempty"`
+	Password  string `json:"password,omitempty" yaml:"password,omitempty"`
+	Name      string `json:"name,omitempty" yaml:"name,omitempty"`
+	Port      string `json:"port,omitempty" yaml:"port,omitempty"`
 }
 
 type PathData struct {
@@ -121,9 +121,9 @@ func parseURL(rawURL string) (*URLData, error) {
 
 // prettyWriter returns a writer connected to jq/yq for pretty-printing,
 // falling back to os.Stdout if the command is unavailable or fails to start.
-func prettyWriter(mode string) (io.Writer, func()) {
+func prettyWriter(format string) (io.Writer, func()) {
 	var name string
-	switch mode {
+	switch format {
 	case "json":
 		name = "jq"
 	case "yaml":
@@ -145,9 +145,9 @@ func prettyWriter(mode string) (io.Writer, func()) {
 }
 
 func main() {
-	kong.Parse(&cli)
+	kong.Parse(&cli, kong.UsageOnError())
 
-	w, cleanup := prettyWriter(cli.Mode)
+	w, cleanup := prettyWriter(cli.Format)
 	defer cleanup()
 
 	enc := json.NewEncoder(w)
@@ -160,7 +160,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		switch cli.Mode {
+		switch cli.Format {
 		case "json":
 			if err = enc.Encode(data); err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)

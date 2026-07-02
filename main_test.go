@@ -19,10 +19,10 @@ func TestParseURL(t *testing.T) {
 				Scheme: "https",
 				Host: &HostData{
 					Authority: "user:pass@example.com:8080",
-					User:     "user",
-					Password: "pass",
-					Name:     "example.com",
-					Port:     "8080",
+					User:      "user",
+					Password:  "pass",
+					Name:      "example.com",
+					Port:      "8080",
 				},
 				Path: &PathData{
 					String: "/foo/bar",

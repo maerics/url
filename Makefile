@@ -1,6 +1,7 @@
 .PHONY: test build tidy fmt vet
 
 test: tidy fmt vet
+	go test ./...
 
 tidy:
 	go mod tidy
