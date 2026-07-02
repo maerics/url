@@ -14,8 +14,9 @@ import (
 )
 
 var cli struct {
-	Format string   `help:"Output format (json or yaml)" short:"f" default:"json" enum:"json,yaml"`
-	Urls   []string `arg:"" help:"URLs to parse"`
+	JSON bool     `help:"Output as JSON (default)" short:"j" xor:"format"`
+	YAML bool     `help:"Output as YAML" short:"y" xor:"format"`
+	Urls []string `arg:"" help:"URLs to parse"`
 }
 
 type HostData struct {
@@ -147,7 +148,12 @@ func prettyWriter(format string) (io.Writer, func()) {
 func main() {
 	kong.Parse(&cli, kong.UsageOnError())
 
-	w, cleanup := prettyWriter(cli.Format)
+	format := "json"
+	if cli.YAML {
+		format = "yaml"
+	}
+
+	w, cleanup := prettyWriter(format)
 	defer cleanup()
 
 	enc := json.NewEncoder(w)
@@ -160,7 +166,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		switch cli.Format {
+		switch format {
 		case "json":
 			if err = enc.Encode(data); err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)

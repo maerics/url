@@ -21,8 +21,9 @@ Arguments:
   <urls> ...    URLs to parse
 
 Flags:
-  -h, --help           Show context-sensitive help.
-  -f, --format="json"    Output format (json or yaml)
+  -h, --help    Show context-sensitive help.
+  -j, --json    Output as JSON (default)
+  -y, --yaml    Output as YAML
 ```
 
 ## Examples
@@ -60,10 +61,10 @@ $ url 'https://user:pass@example.com:8080/a/b?x=1&y=2#frag'
 }
 ```
 
-YAML output with `-f yaml`:
+YAML output with `-y`/`--yaml`:
 
 ```sh
-$ url -f yaml 'https://example.com/search?q=hello'
+$ url -y 'https://example.com/search?q=hello'
 scheme: https
 host:
   name: example.com
